@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { Calculator } from '@/components/pos/Calculator';
-import { Product, CartItem, DailySales } from '@/types/pos';
-import { useSocket } from '@/hooks/useSocket';
+import { CartItem } from '@/types/pos';
+import { useCart } from '@/contexts/CartContext';
+import { useRestaurant } from '@/contexts/RestaurantContext';
+import { useSocketContext } from '@/contexts/SocketContext';
+import { AppProviders } from '@/contexts/AppProviders';
 
 interface POSSystemProps {
   params: Promise<{
@@ -11,24 +14,39 @@ interface POSSystemProps {
   }>;
 }
 
-export default function RestaurantCashier({ params }: POSSystemProps) {
+function RestaurantCashierContent({ params }: POSSystemProps) {
   const [restaurantId, setRestaurantId] = useState<string>('');
-  const { items, setItems, updateOrder, isConnected } = useSocket(restaurantId);
+  
+  // Use contexts instead of local state and useSocket hook
+  const { 
+    items, 
+    addItem, 
+    removeItem, 
+    updateQuantity: updateCartQuantity, 
+    setItems, 
+    getTotalPrice 
+  } = useCart();
+  
+  const { 
+    dailySales, 
+    fetchDailySales, 
+    setRestaurantId: setContextRestaurantId 
+  } = useRestaurant();
+  
+  const { 
+    isConnected, 
+    updateOrder 
+  } = useSocketContext();
 
   // Extract restaurantId from params
   useEffect(() => {
     const getRestaurantId = async () => {
       const { id } = await params;
       setRestaurantId(id);
+      setContextRestaurantId(id);
     };
     getRestaurantId();
-  }, [params]);
-  
-  const [dailySales, setDailySales] = useState<DailySales>({
-    total_sales: 0,
-    total_transactions: 0,
-    sale_date: new Date().toISOString().split('T')[0]
-  });
+  }, [params, setContextRestaurantId]);
   
   // Add item form state
   const [showAddForm, setShowAddForm] = useState(false);
@@ -36,73 +54,41 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
   const [newItemPrice, setNewItemPrice] = useState('');
   const [newItemQuantity, setNewItemQuantity] = useState('1');
 
-  // Fetch daily sales data and add demo items with delays
+  // Add demo items with delays (same as before)
   useEffect(() => {
-    fetchDailySales();
-    
-    // Add items with 1 second delays for demo video
     if (isConnected && restaurantId) {
       // Clear any existing items first
       setItems([]);
-      updateOrder([]);
       
-      // Add items progressively using functional updates
+      // Add items progressively using the context methods
       setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 1, name: 'Burger', price: 18.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 1
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
+        addItem('Burger', 1, 18.99);
       }, 1000);
       
       setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 2, name: 'Pizza', price: 24.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 1
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
+        addItem('Pizza', 1, 24.99);
       }, 2000);
       
       setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 3, name: 'Ravioli', price: 22.50, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 1
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
+        addItem('Ravioli', 1, 22.50);
       }, 3000);
       
       setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 4, name: 'Orange Juice', price: 4.25, category: 'beverage', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 2
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
+        addItem('Orange Juice', 2, 4.25);
       }, 4000);
       
       setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 5, name: 'Wagyu Tomahawk', price: 89.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 1
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
+        addItem('Wagyu Tomahawk', 1, 89.99);
       }, 5000);
     }
-  }, [isConnected, restaurantId]);
+  }, [isConnected, restaurantId, addItem, setItems]);
+
+  // Sync cart changes with socket
+  useEffect(() => {
+    if (isConnected && restaurantId) {
+      updateOrder(items);
+    }
+  }, [items, isConnected, restaurantId, updateOrder]);
 
   // Voice simulation - add items programmatically
   const simulateVoiceCommand = (command: string) => {
@@ -121,9 +107,7 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
         addItem('Pizza', 1, 24.99);
         break;
       case 'clear all':
-        const emptyItems: CartItem[] = [];
-        setItems(emptyItems);
-        updateOrder(emptyItems);
+        setItems([]);
         break;
     }
   };
@@ -138,62 +122,6 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
     console.log('addItem("add pizza") - Add pizza');
     console.log('addItem("clear all") - Clear all items');
   }, []);
-
-  const fetchDailySales = async () => {
-    try {
-      const response = await fetch(`/api/daily-sales?restaurant=${restaurantId}`);
-      const data = await response.json();
-      setDailySales(data);
-    } catch (error) {
-      console.error('Failed to fetch daily sales:', error);
-    }
-  };
-
-  const addItem = (name: string, quantity: number, price: number) => {
-    const newItem: CartItem = {
-      product: {
-        id: Date.now(),
-        name,
-        price,
-        category: 'manual',
-        description: '',
-        image_url: '',
-        stock_quantity: 100,
-        is_active: true
-      },
-      quantity
-    };
-    const newItems = [...items, newItem];
-    console.log('📦 CASHIER: About to add item and call updateOrder');
-    console.log('📦 CASHIER: updateOrder function exists:', typeof updateOrder);
-    setItems(newItems);
-    updateOrder(newItems);
-    console.log('📦 CASHIER: updateOrder called with', newItems.length, 'items');
-  };
-
-  const removeItem = (id: number) => {
-    const newItems = items.filter(item => item.product.id !== id);
-    setItems(newItems);
-    updateOrder(newItems);
-  };
-
-  const updateQuantity = (id: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeItem(id);
-      return;
-    }
-    const newItems = items.map(item =>
-      item.product.id === id
-        ? { ...item, quantity }
-        : item
-    );
-    setItems(newItems);
-    updateOrder(newItems);
-  };
-
-  const getTotalPrice = () => {
-    return items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-  };
 
   const handleAddItem = () => {
     if (newItemName.trim() && newItemPrice && newItemQuantity) {
@@ -217,7 +145,7 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
       <div className="bg-white shadow-sm border-b p-4">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">POS System</h1>
+            <h1 className="text-2xl font-bold text-gray-900">POS System (With Context)</h1>
             <div className="flex items-center space-x-3">
               <p className="text-sm text-gray-600">Restaurant ID: {restaurantId}</p>
               <div className="flex items-center space-x-1">
@@ -256,14 +184,14 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
                   <div className="flex items-center space-x-3">
                     <div className="flex items-center space-x-2">
                       <button
-                        onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                        onClick={() => updateCartQuantity(item.product.id, item.quantity - 1)}
                         className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors"
                       >
                         −
                       </button>
                       <span className="w-8 text-center font-medium">{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                        onClick={() => updateCartQuantity(item.product.id, item.quantity + 1)}
                         className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors"
                       >
                         +
@@ -304,5 +232,29 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main component with providers
+export default function RestaurantCashier({ params }: POSSystemProps) {
+  const [restaurantId, setRestaurantId] = useState<string>('');
+
+  // Extract restaurantId first
+  useEffect(() => {
+    const getRestaurantId = async () => {
+      const { id } = await params;
+      setRestaurantId(id);
+    };
+    getRestaurantId();
+  }, [params]);
+
+  if (!restaurantId) {
+    return <div className="h-screen flex items-center justify-center bg-gray-50">Loading...</div>;
+  }
+
+  return (
+    <AppProviders restaurantId={restaurantId}>
+      <RestaurantCashierContent params={params} />
+    </AppProviders>
   );
 }

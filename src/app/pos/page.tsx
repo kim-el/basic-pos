@@ -40,8 +40,9 @@ export default function POSSystem() {
         price,
         category: 'manual',
         description: '',
-        image: '',
-        stock: 100
+        image_url: '',
+        stock_quantity: 100,
+        is_active: true
       },
       quantity
     };

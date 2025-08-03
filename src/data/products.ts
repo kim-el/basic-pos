@@ -2,68 +2,84 @@ import { Product } from '@/types/pos';
 
 export const mockProducts: Product[] = [
   {
-    id: '1',
+    id: 1,
     name: 'Coffee',
     price: 4.50,
     category: 'Beverages',
     description: 'Fresh brewed coffee',
-    stock: 50
+    image_url: '',
+    stock_quantity: 50,
+    is_active: true
   },
   {
-    id: '2',
+    id: 2,
     name: 'Croissant',
     price: 3.25,
     category: 'Bakery',
     description: 'Buttery croissant',
-    stock: 20
+    image_url: '',
+    stock_quantity: 20,
+    is_active: true
   },
   {
-    id: '3',
+    id: 3,
     name: 'Caesar Salad',
     price: 12.99,
     category: 'Food',
     description: 'Fresh caesar salad with croutons',
-    stock: 15
+    image_url: '',
+    stock_quantity: 15,
+    is_active: true
   },
   {
-    id: '4',
+    id: 4,
     name: 'Orange Juice',
     price: 3.75,
     category: 'Beverages',
     description: 'Freshly squeezed orange juice',
-    stock: 30
+    image_url: '',
+    stock_quantity: 30,
+    is_active: true
   },
   {
-    id: '5',
+    id: 5,
     name: 'Chocolate Muffin',
     price: 4.25,
     category: 'Bakery',
     description: 'Double chocolate chip muffin',
-    stock: 25
+    image_url: '',
+    stock_quantity: 25,
+    is_active: true
   },
   {
-    id: '6',
+    id: 6,
     name: 'Sandwich',
     price: 8.50,
     category: 'Food',
     description: 'Turkey and cheese sandwich',
-    stock: 12
+    image_url: '',
+    stock_quantity: 12,
+    is_active: true
   },
   {
-    id: '7',
+    id: 7,
     name: 'Latte',
     price: 5.25,
     category: 'Beverages',
     description: 'Espresso with steamed milk',
-    stock: 40
+    image_url: '',
+    stock_quantity: 40,
+    is_active: true
   },
   {
-    id: '8',
+    id: 8,
     name: 'Bagel',
     price: 2.75,
     category: 'Bakery',
     description: 'Everything bagel with cream cheese',
-    stock: 18
+    image_url: '',
+    stock_quantity: 18,
+    is_active: true
   }
 ];
 
