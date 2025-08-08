@@ -22,7 +22,7 @@ services:
 
   # Next.js POS Application
   pos-app:
-    build: .
+    image: ghcr.io/kim-el/basic-pos:latest
     restart: unless-stopped
     ports:
       - "3000:3000"
