@@ -114,7 +114,7 @@ function RestaurantCashierContent({ params }: POSSystemProps) {
 
   // Expose function to window for live testing
   useEffect(() => {
-    (window as any).addItem = simulateVoiceCommand;
+    (window as Window & { addItem?: typeof simulateVoiceCommand }).addItem = simulateVoiceCommand;
     console.log('🎤 Voice commands available:');
     console.log('addItem("add burger") - Add burger');
     console.log('addItem("add fries") - Add fries'); 
