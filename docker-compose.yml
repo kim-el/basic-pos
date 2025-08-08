@@ -20,9 +20,12 @@ services:
       timeout: 5s
       retries: 5
 
-  # Next.js POS Application
+  # Next.js POS Application  
   pos-app:
-    image: ghcr.io/kim-el/basic-pos:latest
+    build:
+      context: .
+      args:
+        - NODE_OPTIONS=--max-old-space-size=400
     restart: unless-stopped
     ports:
       - "3000:3000"
