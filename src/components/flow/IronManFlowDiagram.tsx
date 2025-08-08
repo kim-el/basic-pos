@@ -82,8 +82,14 @@ const ironManNodes: IronManNodeData[] = [
   }
 ];
 
+// Extended connection type for Iron Man relationships
+type IronManConnectionType = 
+  | 'CEO_OF' | 'ASSISTANT_OF' | 'BUSINESS_PARTNER_OF' | 'AI_ASSISTANT_OF' 
+  | 'FRIEND_OF' | 'BUILT' | 'USED_BY' | 'BOARD_MEMBER_OF' 
+  | 'SECRETLY_WORKS_WITH' | 'STOLE' | 'KIDNAPPED' | 'HELPED_ESCAPE';
+
 // Define relationships
-const ironManConnections = [
+const ironManConnections: Array<{from: string, to: string, type: IronManConnectionType}> = [
   // Tony's relationships
   { from: 'tony', to: 'starkIndustries', type: 'CEO_OF' },
   { from: 'pepper', to: 'tony', type: 'ASSISTANT_OF' },
@@ -102,12 +108,6 @@ const ironManConnections = [
   { from: 'tenRings', to: 'tony', type: 'KIDNAPPED' },
   { from: 'yinsen', to: 'tony', type: 'HELPED_ESCAPE' }
 ];
-
-// Extended connection type for Iron Man relationships
-type IronManConnectionType = 
-  | 'CEO_OF' | 'ASSISTANT_OF' | 'BUSINESS_PARTNER_OF' | 'AI_ASSISTANT_OF' 
-  | 'FRIEND_OF' | 'BUILT' | 'USED_BY' | 'BOARD_MEMBER_OF' 
-  | 'SECRETLY_WORKS_WITH' | 'STOLE' | 'KIDNAPPED' | 'HELPED_ESCAPE';
 
 const getConnectionColor = (type: IronManConnectionType) => {
   switch (type) {
