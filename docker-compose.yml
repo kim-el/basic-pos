@@ -22,7 +22,10 @@ services:
 
   # Next.js POS Application
   pos-app:
-    image: ghcr.io/kim-el/basic-pos:latest
+    build: 
+      context: .
+      args:
+        - NODE_OPTIONS=--max-old-space-size=512
     restart: unless-stopped
     ports:
       - "3000:3000"
