@@ -80,19 +80,19 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
           {/* Voice Activation Button */}
           <Button
             onClick={toggleListening}
-            className={`rounded-lg w-40 h-40 text-xl font-bold border-4 ${isListening ? 'bg-red-500 hover:bg-red-600 border-red-600' : 'bg-blue-500 hover:bg-blue-600 border-blue-600'} shadow-xl`}
+            className={`rounded-lg w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 text-sm sm:text-lg lg:text-xl font-bold border-2 sm:border-4 ${isListening ? 'bg-red-500 hover:bg-red-600 border-red-600' : 'bg-blue-500 hover:bg-blue-600 border-blue-600'} shadow-lg sm:shadow-xl`}
             variant="default"
           >
             <div className="flex flex-col items-center justify-center">
               {isListening ? (
                 <>
-                  <MicOff className="h-12 w-12 mb-2" />
-                  <span>STOP</span>
+                  <MicOff className="h-6 w-6 sm:h-8 sm:w-8 lg:h-12 lg:w-12 mb-1 sm:mb-2" />
+                  <span className="text-xs sm:text-sm lg:text-base">STOP</span>
                 </>
               ) : (
                 <>
-                  <Mic className="h-12 w-12 mb-2" />
-                  <span>START</span>
+                  <Mic className="h-6 w-6 sm:h-8 sm:w-8 lg:h-12 lg:w-12 mb-1 sm:mb-2" />
+                  <span className="text-xs sm:text-sm lg:text-base">START</span>
                 </>
               )}
             </div>
@@ -103,7 +103,7 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
         <div className="flex justify-center">
           <Badge 
             variant={isListening ? "default" : "secondary"}
-            className="text-xs"
+            className="text-xs sm:text-sm"
           >
             {isListening ? "Listening..." : "Ready"}
           </Badge>
@@ -112,8 +112,8 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
         {/* Last Command Display */}
         {lastCommand && (
           <div className="text-center">
-            <p className="text-xs text-gray-500 mb-1">Last command:</p>
-            <p className="text-sm font-medium bg-gray-100 rounded px-2 py-1">
+            <p className="text-xs sm:text-sm text-gray-500 mb-1">Last command:</p>
+            <p className="text-xs sm:text-sm font-medium bg-gray-100 rounded px-2 py-1 break-words">
               "{lastCommand}"
             </p>
           </div>

@@ -215,11 +215,11 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b p-4">
-        <div className="flex justify-between items-center">
+      <div className="bg-white shadow-sm border-b p-3 sm:p-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">POS System</h1>
-            <div className="flex items-center space-x-3">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">POS System</h1>
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3">
               <p className="text-sm text-gray-600">Restaurant ID: {restaurantId}</p>
               <div className="flex items-center space-x-1">
                 <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
@@ -227,60 +227,67 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-4 text-sm text-gray-600">
-            <span>Total Sales Today: ${(dailySales?.total_sales || 0).toFixed(2)}</span>
-            <span>Transactions: {dailySales?.total_transactions || 0}</span>
+          <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-sm text-gray-600">
+            <span>Sales: ${(dailySales?.total_sales || 0).toFixed(2)}</span>
+            <span>Orders: {dailySales?.total_transactions || 0}</span>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex gap-4 p-4 overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row gap-3 sm:gap-4 p-3 sm:p-4 overflow-hidden">
         {/* Left Side - Items Box and Voice Control */}
-        <div className="flex-1 flex flex-col gap-4">
+        <div className="flex-1 flex flex-col gap-3 sm:gap-4">
           {/* Items Box */}
-          <div className="bg-white rounded-lg shadow-lg p-4 flex flex-col h-96">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Items</h2>
+          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 flex flex-col h-96 sm:h-[26rem] lg:h-[32rem]">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800">Items</h2>
             
             {/* Items List */}
-            <div className="flex-1 overflow-y-auto space-y-2 mb-4 min-h-0">
+            <div className="flex-1 overflow-y-auto space-y-2 mb-3 sm:mb-4 min-h-0">
               {items.length === 0 ? (
-                <div className="text-center text-gray-500 py-8">
-                  <p>No items added yet</p>
-                  <p className="text-sm">Speak to add items</p>
+                <div className="text-center text-gray-500 py-6 sm:py-8">
+                  <p className="text-sm sm:text-base">No items added yet</p>
+                  <p className="text-xs sm:text-sm">Speak to add items</p>
                 </div>
               ) : (
                 items.map((item) => (
-                  <div key={item.product.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex-1">
-                      <h3 className="font-medium text-gray-900">{item.product.name}</h3>
-                      <p className="text-sm text-gray-600">${item.product.price.toFixed(2)} each</p>
+                  <div 
+                    key={item.product.id} 
+                    onClick={() => removeItem(item.product.id)}
+                    className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 hover:bg-red-50 rounded-lg cursor-pointer transition-colors group"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-gray-900 group-hover:text-red-700 text-lg sm:text-xl truncate transition-colors">{item.product.name}</h3>
+                      <p className="text-sm sm:text-base text-gray-600 group-hover:text-red-600 font-medium transition-colors">${item.product.price.toFixed(2)} each</p>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-3 sm:space-x-4 ml-3">
+                      <div className="flex items-center space-x-2 sm:space-x-3">
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateQuantity(item.product.id, item.quantity - 1);
+                          }}
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors text-lg font-semibold"
                         >
                           −
                         </button>
-                        <span className="w-8 text-center font-medium">{item.quantity}</span>
+                        <span className="w-8 sm:w-10 text-center font-bold text-lg sm:text-xl group-hover:text-red-700 transition-colors">{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateQuantity(item.product.id, item.quantity + 1);
+                          }}
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors text-lg font-semibold"
                         >
                           +
                         </button>
                       </div>
-                      <div className="text-right">
-                        <p className="font-semibold">${(item.product.price * item.quantity).toFixed(2)}</p>
+                      <div className="text-right min-w-0">
+                        <p className="font-bold text-lg sm:text-xl text-blue-600 group-hover:text-red-600 transition-colors">${(item.product.price * item.quantity).toFixed(2)}</p>
                       </div>
-                      <button
-                        onClick={() => removeItem(item.product.id)}
-                        className="text-red-500 hover:text-red-700 ml-2"
-                      >
+                      <div className="text-red-500 group-hover:text-red-700 ml-2 text-xl font-bold transition-colors">
                         ×
-                      </button>
+                      </div>
                     </div>
                   </div>
                 ))
@@ -288,9 +295,9 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
             </div>
             
             {/* Total */}
-            <div className="border-t pt-4">
-              <div className="flex justify-between items-center text-xl font-bold">
-                <span>Total:</span>
+            <div className="border-t-2 pt-4 sm:pt-5">
+              <div className="flex justify-between items-center text-2xl sm:text-3xl lg:text-4xl font-bold">
+                <span className="text-gray-900">Total:</span>
                 <span className="text-blue-600">${getTotalPrice().toFixed(2)}</span>
               </div>
             </div>
@@ -301,7 +308,7 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
         </div>
 
         {/* Right Side - Calculator */}
-        <div className="w-96">
+        <div className="w-full lg:w-96 order-first lg:order-last">
           <Calculator 
             totalAmount={getTotalPrice()}
             onChangeCalculated={(change) => {
