@@ -10,30 +10,46 @@ interface VoiceWaveProps {
 }
 
 export function VoiceWave({ isListening = false, shouldAnalyzeAudio = false, className }: VoiceWaveProps) {
-  const [bars, setBars] = useState<number[]>([4, 4, 4, 4, 4, 4, 4]);
+  const [bars, setBars] = useState<number[]>([8, 8, 8, 8, 8, 8, 8]);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const animationFrameRef = useRef<number>();
+  const streamRef = useRef<MediaStream | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
     if (!shouldAnalyzeAudio) {
       // Reset to flat line when not analyzing audio
-      setBars([4, 4, 4, 4, 4, 4, 4]);
+      setBars([8, 8, 8, 8, 8, 8, 8]);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      // Stop microphone stream
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+      // Close audio context
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
+      analyserRef.current = null;
+      dataArrayRef.current = null;
       return;
     }
 
     // Get user microphone access only when we should analyze audio
     navigator.mediaDevices?.getUserMedia({ audio: true })
       .then(stream => {
+        streamRef.current = stream;
         const audioContext = new AudioContext();
+        audioContextRef.current = audioContext;
         const analyser = audioContext.createAnalyser();
         const microphone = audioContext.createMediaStreamSource(stream);
         
-        analyser.smoothingTimeConstant = 0.8;
-        analyser.fftSize = 32;
+        analyser.smoothingTimeConstant = 0.3;
+        analyser.fftSize = 256;
         
         microphone.connect(analyser);
         analyserRef.current = analyser;
@@ -44,12 +60,13 @@ export function VoiceWave({ isListening = false, shouldAnalyzeAudio = false, cla
           
           analyserRef.current.getByteFrequencyData(dataArrayRef.current);
           
-          // Convert frequency data to bar heights (like iPhone)
+          // Convert frequency data to bar heights with much higher sensitivity
           const newBars = Array.from({ length: 7 }, (_, i) => {
             const dataIndex = Math.floor((i / 7) * dataArrayRef.current!.length);
             const value = dataArrayRef.current![dataIndex] || 0;
-            // Convert to height (4-48px range for better visibility)
-            return Math.max(4, Math.min(48, (value / 255) * 44 + 4));
+            // Much more sensitive: amplify low values and extend range
+            const amplified = Math.pow(value / 255, 0.5) * 255; // Square root for more sensitivity
+            return Math.max(8, Math.min(80, (amplified / 255) * 72 + 8));
           });
           
           setBars(newBars);
@@ -61,18 +78,25 @@ export function VoiceWave({ isListening = false, shouldAnalyzeAudio = false, cla
       .catch(err => {
         console.error('Microphone access denied:', err);
         // Fallback to subtle pulse if mic access denied
-        setBars([6, 6, 6, 6, 6, 6, 6]);
+        setBars([12, 12, 12, 12, 12, 12, 12]);
       });
 
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      // Clean up on unmount
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
     };
   }, [shouldAnalyzeAudio]);
 
   return (
-    <div className={cn("flex items-center h-12 w-full px-2", className)} style={{ gap: '1px' }}>
+    <div className={cn("flex items-center h-20 sm:h-24 lg:h-28 w-full px-2", className)} style={{ gap: '1px' }}>
       {Array.from({ length: 200 }, (_, i) => {
         const barIndex = Math.floor((i / 200) * bars.length);
         const height = bars[barIndex] || 2;
