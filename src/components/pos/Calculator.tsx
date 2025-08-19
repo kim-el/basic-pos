@@ -85,26 +85,16 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 max-w-sm mx-auto">
-      {/* POS Header */}
-      <div className="mb-2 text-center">
-        <span className="text-sm font-medium px-3 py-1 rounded-full bg-green-100 text-green-800">
-          Cash Register
-        </span>
-      </div>
+    <div className="bg-white rounded-lg shadow-lg p-3 max-w-sm mx-auto h-full flex flex-col">
       
-      <div className="mb-4">
-        <div className="bg-gray-900 text-white text-right text-2xl p-4 rounded font-mono min-h-[60px] flex items-center justify-end">
+      <div className="mb-3 flex-shrink-0">
+        <div className="bg-gray-900 text-white text-right text-xl p-3 rounded font-mono min-h-[50px] flex items-center justify-end">
           {display}
         </div>
         
         {/* Payment Info */}
         {totalAmount > 0 && (
-          <div className="mt-2 space-y-1 text-sm">
-            <div className="flex justify-between text-gray-600">
-              <span>Total:</span>
-              <span>${totalAmount.toFixed(2)}</span>
-            </div>
+          <div className="mt-2 space-y-1 text-xs">
             {cashReceived !== null && (
               <div className="flex justify-between text-gray-600">
                 <span>Cash:</span>
@@ -123,43 +113,37 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
         )}
       </div>
       
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-1 flex-1 grid-rows-6">
         {/* Row 1 - Control buttons */}
         <button
           onClick={clear}
-          className="bg-red-500 hover:bg-red-600 text-white p-4 rounded-lg font-semibold transition-colors text-lg"
+          className="bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors text-sm col-span-2 flex items-center justify-center"
         >
           Clear
         </button>
         <button
           onClick={backspace}
-          className="bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded-lg font-semibold transition-colors text-lg"
+          className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition-colors text-sm flex items-center justify-center"
         >
           ⌫
-        </button>
-        <button
-          onClick={() => {}}
-          className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg font-semibold transition-colors text-lg"
-        >
-          ✓
         </button>
 
         {/* Row 2 */}
         <button
           onClick={() => inputNumber('7')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           7
         </button>
         <button
           onClick={() => inputNumber('8')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           8
         </button>
         <button
           onClick={() => inputNumber('9')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           9
         </button>
@@ -167,19 +151,19 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
         {/* Row 3 */}
         <button
           onClick={() => inputNumber('4')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           4
         </button>
         <button
           onClick={() => inputNumber('5')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           5
         </button>
         <button
           onClick={() => inputNumber('6')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           6
         </button>
@@ -187,19 +171,19 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
         {/* Row 4 */}
         <button
           onClick={() => inputNumber('1')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           1
         </button>
         <button
           onClick={() => inputNumber('2')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           2
         </button>
         <button
           onClick={() => inputNumber('3')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           3
         </button>
@@ -207,15 +191,23 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
         {/* Row 5 */}
         <button
           onClick={() => inputNumber('0')}
-          className="col-span-2 bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="col-span-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           0
         </button>
         <button
           onClick={inputDecimal}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 p-4 rounded-lg font-semibold transition-colors text-xl"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
           .
+        </button>
+        
+        {/* Row 6 */}
+        <button
+          onClick={() => {}}
+          className="col-span-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+        >
+          Enter
         </button>
       </div>
     </div>

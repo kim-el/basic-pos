@@ -308,7 +308,7 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
         </div>
 
         {/* Right Side - Calculator */}
-        <div className="w-full lg:w-96 order-first lg:order-last">
+        <div className="w-full lg:w-96 order-first lg:order-last h-96 sm:h-[26rem] lg:h-[32rem]">
           <Calculator 
             totalAmount={getTotalPrice()}
             onChangeCalculated={(change) => {
