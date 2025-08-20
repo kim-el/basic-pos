@@ -60,65 +60,74 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
     
     // Add items with 1 second delays for demo video
     if (restaurantId) {
-      // Clear any existing items first
+      // Clear any existing items first and wait a bit
       setItems([]);
       updateOrder([]);
       
-      // Add items progressively using functional updates
-      setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 1, name: 'Burger', price: 18.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 1
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
-      }, 1000);
+      // Define all demo items upfront
+      const demoItems = [
+        { id: 1, name: 'Burger', price: 18.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
+        { id: 2, name: 'Pizza', price: 24.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
+        { id: 3, name: 'Ravioli', price: 22.50, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
+        { id: 4, name: 'Orange Juice', price: 4.25, category: 'beverage', description: '', image_url: '', stock_quantity: 100, is_active: true },
+        { id: 5, name: 'Wagyu Tomahawk', price: 89.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true }
+      ];
       
-      setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 2, name: 'Pizza', price: 24.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 1
-          }];
+      // Add items progressively without depending on previous state
+      const timeouts = [
+        setTimeout(() => {
+          const newItems = [{ product: demoItems[0], quantity: 1 }];
+          setItems(newItems);
           updateOrder(newItems);
-          return newItems;
-        });
-      }, 2000);
+        }, 1000),
+        
+        setTimeout(() => {
+          const newItems = [
+            { product: demoItems[0], quantity: 1 },
+            { product: demoItems[1], quantity: 1 }
+          ];
+          setItems(newItems);
+          updateOrder(newItems);
+        }, 2000),
+        
+        setTimeout(() => {
+          const newItems = [
+            { product: demoItems[0], quantity: 1 },
+            { product: demoItems[1], quantity: 1 },
+            { product: demoItems[2], quantity: 1 }
+          ];
+          setItems(newItems);
+          updateOrder(newItems);
+        }, 3000),
+        
+        setTimeout(() => {
+          const newItems = [
+            { product: demoItems[0], quantity: 1 },
+            { product: demoItems[1], quantity: 1 },
+            { product: demoItems[2], quantity: 1 },
+            { product: demoItems[3], quantity: 2 }
+          ];
+          setItems(newItems);
+          updateOrder(newItems);
+        }, 4000),
+        
+        setTimeout(() => {
+          const newItems = [
+            { product: demoItems[0], quantity: 1 },
+            { product: demoItems[1], quantity: 1 },
+            { product: demoItems[2], quantity: 1 },
+            { product: demoItems[3], quantity: 2 },
+            { product: demoItems[4], quantity: 1 }
+          ];
+          setItems(newItems);
+          updateOrder(newItems);
+        }, 5000)
+      ];
       
-      setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 3, name: 'Ravioli', price: 22.50, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 1
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
-      }, 3000);
-      
-      setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 4, name: 'Orange Juice', price: 4.25, category: 'beverage', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 2
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
-      }, 4000);
-      
-      setTimeout(() => {
-        setItems(prev => {
-          const newItems = [...prev, {
-            product: { id: 5, name: 'Wagyu Tomahawk', price: 89.99, category: 'food', description: '', image_url: '', stock_quantity: 100, is_active: true },
-            quantity: 1
-          }];
-          updateOrder(newItems);
-          return newItems;
-        });
-      }, 5000);
+      // Cleanup timeouts
+      return () => {
+        timeouts.forEach(timeout => clearTimeout(timeout));
+      };
     }
   }, [restaurantId]);
 
@@ -403,69 +412,67 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
             </div>
           </div>
 
-          {/* Bottom Row: Voice Control and Sales History */}
-          <div className="flex gap-3 sm:gap-4">
-            {/* Voice Control */}
-            <div className="flex-1">
-              <VoiceControl onVoiceCommand={simulateVoiceCommand} />
+          {/* Sales History - Full Width */}
+          <div className="bg-gray-800 rounded-lg shadow-lg p-3 sm:p-4 h-48 sm:h-52 lg:h-56 flex flex-col border border-gray-700">
+            <div className="mb-3 sm:mb-4">
+              <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Sales History
+              </h2>
             </div>
             
-            {/* Sales History */}
-            <div className="flex-1">
-              <div className="bg-gray-800 rounded-lg shadow-lg p-3 sm:p-4 h-48 sm:h-52 lg:h-56 flex flex-col border border-gray-700">
-                <div className="mb-3 sm:mb-4">
-                  <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    Sales History
-                  </h2>
+            <div className="flex-1 overflow-y-auto space-y-2 mb-3">
+              {salesHistory.length === 0 ? (
+                <div className="text-center text-gray-400 py-6">
+                  <p className="text-sm">No sales yet today</p>
+                  <p className="text-xs">Complete a sale to see history</p>
                 </div>
-                
-                <div className="flex-1 overflow-y-auto space-y-2 mb-3">
-                  {salesHistory.length === 0 ? (
-                    <div className="text-center text-gray-400 py-6">
-                      <p className="text-sm">No sales yet today</p>
-                      <p className="text-xs">Complete a sale to see history</p>
+              ) : (
+                salesHistory.map((sale) => (
+                  <div 
+                    key={sale.id} 
+                    onClick={() => restoreSaleFromHistory(sale)}
+                    className="flex justify-between items-center p-2 bg-gray-700 hover:bg-blue-900 rounded text-sm cursor-pointer transition-colors group"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-gray-300 group-hover:text-blue-300">{sale.timestamp}</span>
+                      <span className="text-xs text-gray-400 group-hover:text-blue-400">{sale.items.length} item{sale.items.length !== 1 ? 's' : ''}</span>
                     </div>
-                  ) : (
-                    salesHistory.map((sale) => (
-                      <div 
-                        key={sale.id} 
-                        onClick={() => restoreSaleFromHistory(sale)}
-                        className="flex justify-between items-center p-2 bg-gray-700 hover:bg-blue-900 rounded text-sm cursor-pointer transition-colors group"
-                      >
-                        <div className="flex flex-col">
-                          <span className="text-gray-300 group-hover:text-blue-300">{sale.timestamp}</span>
-                          <span className="text-xs text-gray-400 group-hover:text-blue-400">{sale.items.length} item{sale.items.length !== 1 ? 's' : ''}</span>
-                        </div>
-                        <span className="font-semibold text-green-400 group-hover:text-blue-400">${sale.amount.toFixed(2)}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-                
-                <div className="border-t border-gray-600 pt-3">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-300">Today&apos;s Total:</span>
-                    <span className="font-bold text-blue-400">${(dailySales?.total_sales || 0).toFixed(2)}</span>
+                    <span className="font-semibold text-green-400 group-hover:text-blue-400">${sale.amount.toFixed(2)}</span>
                   </div>
-                </div>
+                ))
+              )}
+            </div>
+            
+            <div className="border-t border-gray-600 pt-3">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-300">Today&apos;s Total:</span>
+                <span className="font-bold text-blue-400">${(dailySales?.total_sales || 0).toFixed(2)}</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Side - Calculator - LOCKED HEIGHT */}
-        <div className="w-full lg:w-96 order-first lg:order-last h-[32rem] min-h-[32rem] max-h-[32rem]">
-          <Calculator 
-            totalAmount={isHistoryMode ? (currentHistorySale?.amount || 0) : getTotalPrice()}
-            onChangeCalculated={(change) => {
-              console.log('Change calculated:', change);
-            }}
-            onCompleteSale={isHistoryMode ? undefined : completeSale}
-            isDisabled={isHistoryMode}
-          />
+        {/* Right Side - Calculator and Voice Control */}
+        <div className="w-full lg:w-96 order-first lg:order-last flex flex-col gap-3 sm:gap-4">
+          {/* Calculator - LOCKED HEIGHT */}
+          <div className="h-[32rem] min-h-[32rem] max-h-[32rem]">
+            <Calculator 
+              totalAmount={isHistoryMode ? (currentHistorySale?.amount || 0) : getTotalPrice()}
+              onChangeCalculated={(change) => {
+                console.log('Change calculated:', change);
+              }}
+              onCompleteSale={isHistoryMode ? undefined : completeSale}
+              isDisabled={isHistoryMode}
+            />
+          </div>
+          
+          {/* Voice Control */}
+          <div className="h-48 sm:h-52 lg:h-56">
+            <VoiceControl onVoiceCommand={simulateVoiceCommand} />
+          </div>
         </div>
       </div>
     </div>
