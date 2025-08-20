@@ -62,10 +62,10 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow-lg p-3 sm:p-4 h-48 sm:h-52 lg:h-56 flex flex-col ${className}`}>
+    <div className={`bg-gray-800 rounded-lg shadow-lg p-3 sm:p-4 h-48 sm:h-52 lg:h-56 flex flex-col border border-gray-700 ${className}`}>
       <div className="mb-3 sm:mb-4">
-        <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-gray-800">
-          <Volume2 className="h-5 w-5" />
+        <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
+          <Volume2 className="h-5 w-5 text-white" />
           Voice Control
         </h2>
       </div>
@@ -81,7 +81,7 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
           {/* Voice Activation Button */}
           <Button
             onClick={toggleListening}
-            className={`rounded-lg w-20 h-20 sm:w-24 sm:h-24 text-sm sm:text-base font-bold border-2 ${isListening ? 'bg-red-500 hover:bg-red-600 border-red-600' : 'bg-blue-500 hover:bg-blue-600 border-blue-600'} shadow-lg flex-shrink-0`}
+            className={`rounded-lg w-20 h-20 sm:w-24 sm:h-24 text-sm sm:text-base font-bold border-2 ${isListening ? 'bg-red-600 hover:bg-red-700 border-red-500' : 'bg-blue-600 hover:bg-blue-700 border-blue-500'} shadow-lg flex-shrink-0`}
             variant="default"
           >
             <div className="flex flex-col items-center justify-center">
@@ -114,8 +114,8 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
         <div className="min-h-[2rem] flex items-center justify-center">
           {lastCommand && (
             <div className="text-center">
-              <p className="text-xs sm:text-sm text-gray-500 mb-1">Last command:</p>
-              <p className="text-xs sm:text-sm font-medium bg-gray-100 rounded px-2 py-1 break-words">
+              <p className="text-xs sm:text-sm text-gray-400 mb-1">Last command:</p>
+              <p className="text-xs sm:text-sm font-medium bg-gray-700 text-gray-200 rounded px-2 py-1 break-words">
                 &ldquo;{lastCommand}&rdquo;
               </p>
             </div>

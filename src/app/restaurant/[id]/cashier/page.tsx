@@ -270,25 +270,25 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
 
   // Show loading state until we have restaurantId
   if (!restaurantId) {
-    return <div className="h-screen flex items-center justify-center bg-gray-50">Loading...</div>;
+    return <div className="h-screen flex items-center justify-center bg-gray-900 text-white">Loading...</div>;
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b p-3 sm:p-4">
+      <div className="bg-gray-800 shadow-sm border-b border-gray-700 p-3 sm:p-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">POS System</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-white">POS System</h1>
             <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3">
-              <p className="text-sm text-gray-600">Restaurant ID: {restaurantId}</p>
+              <p className="text-sm text-gray-300">Restaurant ID: {restaurantId}</p>
               <div className="flex items-center space-x-1">
                 <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                <span className="text-xs text-gray-500">{isConnected ? 'Connected' : 'Disconnected'}</span>
+                <span className="text-xs text-gray-400">{isConnected ? 'Connected' : 'Disconnected'}</span>
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-sm text-gray-600">
+          <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-sm text-gray-300">
             <span>Sales: ${(dailySales?.total_sales || 0).toFixed(2)}</span>
             <span>Orders: {dailySales?.total_transactions || 0}</span>
           </div>
@@ -300,15 +300,15 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
         {/* Left Side - Items Box and Voice Control */}
         <div className="flex-1 flex flex-col gap-3 sm:gap-4">
           {/* Items Box - LOCKED HEIGHT */}
-          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 flex flex-col h-[32rem] min-h-[32rem] max-h-[32rem]">
+          <div className="bg-gray-800 rounded-lg shadow-lg p-3 sm:p-4 flex flex-col h-[32rem] min-h-[32rem] max-h-[32rem] border border-gray-700">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
+              <h2 className="text-lg sm:text-xl font-semibold text-white">
                 {isHistoryMode ? `Sale History - ${currentHistorySale?.timestamp}` : 'Items'}
               </h2>
               {isHistoryMode && (
                 <button
                   onClick={exitHistoryMode}
-                  className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition-colors"
+                  className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors"
                 >
                   Back to Cart
                 </button>
@@ -318,7 +318,7 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
             {/* Items List */}
             <div className="flex-1 overflow-y-auto space-y-2 mb-3 sm:mb-4 min-h-0">
               {(isHistoryMode ? currentHistorySale?.items || [] : items).length === 0 ? (
-                <div className="text-center text-gray-500 py-6 sm:py-8">
+                <div className="text-center text-gray-400 py-6 sm:py-8">
                   <p className="text-sm sm:text-base">
                     {isHistoryMode ? 'No items in this sale' : 'No items added yet'}
                   </p>
@@ -331,20 +331,20 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
                     onClick={isHistoryMode ? undefined : () => removeItem(item.product.id)}
                     className={`flex items-center justify-between p-3 sm:p-4 rounded-lg transition-colors ${
                       isHistoryMode 
-                        ? 'bg-gray-100 border border-gray-200' 
-                        : 'bg-gray-50 hover:bg-red-50 cursor-pointer group'
+                        ? 'bg-gray-700 border border-gray-600' 
+                        : 'bg-gray-700 hover:bg-red-900 cursor-pointer group'
                     }`}
                   >
                     <div className="flex-1 min-w-0 max-w-[40%]">
                       <h3 className={`font-semibold text-lg sm:text-xl truncate transition-colors ${
                         isHistoryMode 
-                          ? 'text-gray-700' 
-                          : 'text-gray-900 group-hover:text-red-700'
+                          ? 'text-gray-200' 
+                          : 'text-white group-hover:text-red-300'
                       }`}>{item.product.name}</h3>
                       <p className={`text-sm sm:text-base font-medium transition-colors ${
                         isHistoryMode 
-                          ? 'text-gray-500' 
-                          : 'text-gray-600 group-hover:text-red-600'
+                          ? 'text-gray-400' 
+                          : 'text-gray-300 group-hover:text-red-400'
                       }`}>${item.product.price.toFixed(2)} each</p>
                     </div>
                     <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
@@ -355,34 +355,34 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
                               e.stopPropagation();
                               updateQuantity(item.product.id, item.quantity - 1);
                             }}
-                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors text-lg font-semibold"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-900 text-red-300 flex items-center justify-center hover:bg-red-800 transition-colors text-lg font-semibold"
                           >
                             −
                           </button>
-                          <span className="w-8 sm:w-10 text-center font-bold text-lg sm:text-xl group-hover:text-red-700 transition-colors">{item.quantity}</span>
+                          <span className="w-8 sm:w-10 text-center font-bold text-lg sm:text-xl group-hover:text-red-300 text-white transition-colors">{item.quantity}</span>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               updateQuantity(item.product.id, item.quantity + 1);
                             }}
-                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors text-lg font-semibold"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-900 text-green-300 flex items-center justify-center hover:bg-green-800 transition-colors text-lg font-semibold"
                           >
                             +
                           </button>
                         </div>
                       )}
                       {isHistoryMode && (
-                        <span className="w-8 sm:w-10 text-center font-bold text-lg sm:text-xl text-gray-700">
+                        <span className="w-8 sm:w-10 text-center font-bold text-lg sm:text-xl text-gray-200">
                           {item.quantity}
                         </span>
                       )}
                       <p className={`font-bold text-lg sm:text-xl ml-4 text-right min-w-[100px] transition-colors ${
                         isHistoryMode 
-                          ? 'text-gray-700' 
-                          : 'text-blue-600 group-hover:text-red-600'
+                          ? 'text-gray-200' 
+                          : 'text-blue-400 group-hover:text-red-400'
                       }`}>${(item.product.price * item.quantity).toFixed(2)}</p>
                       {!isHistoryMode && (
-                        <div className="text-red-500 group-hover:text-red-700 text-xl font-bold transition-colors ml-2">
+                        <div className="text-red-400 group-hover:text-red-300 text-xl font-bold transition-colors ml-2">
                           ×
                         </div>
                       )}
@@ -393,10 +393,10 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
             </div>
             
             {/* Total */}
-            <div className="border-t-2 pt-4 sm:pt-5">
+            <div className="border-t-2 border-gray-600 pt-4 sm:pt-5">
               <div className="flex justify-between items-center text-2xl sm:text-3xl lg:text-4xl font-bold">
-                <span className="text-gray-900">Total:</span>
-                <span className={isHistoryMode ? "text-gray-700" : "text-blue-600"}>
+                <span className="text-white">Total:</span>
+                <span className={isHistoryMode ? "text-gray-200" : "text-blue-400"}>
                   ${isHistoryMode ? (currentHistorySale?.amount.toFixed(2) || '0.00') : getTotalPrice().toFixed(2)}
                 </span>
               </div>
@@ -412,9 +412,9 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
             
             {/* Sales History */}
             <div className="flex-1">
-              <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 h-48 sm:h-52 lg:h-56 flex flex-col">
+              <div className="bg-gray-800 rounded-lg shadow-lg p-3 sm:p-4 h-48 sm:h-52 lg:h-56 flex flex-col border border-gray-700">
                 <div className="mb-3 sm:mb-4">
-                  <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-gray-800">
+                  <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
@@ -424,7 +424,7 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
                 
                 <div className="flex-1 overflow-y-auto space-y-2 mb-3">
                   {salesHistory.length === 0 ? (
-                    <div className="text-center text-gray-500 py-6">
+                    <div className="text-center text-gray-400 py-6">
                       <p className="text-sm">No sales yet today</p>
                       <p className="text-xs">Complete a sale to see history</p>
                     </div>
@@ -433,22 +433,22 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
                       <div 
                         key={sale.id} 
                         onClick={() => restoreSaleFromHistory(sale)}
-                        className="flex justify-between items-center p-2 bg-gray-50 hover:bg-blue-50 rounded text-sm cursor-pointer transition-colors group"
+                        className="flex justify-between items-center p-2 bg-gray-700 hover:bg-blue-900 rounded text-sm cursor-pointer transition-colors group"
                       >
                         <div className="flex flex-col">
-                          <span className="text-gray-600 group-hover:text-blue-700">{sale.timestamp}</span>
-                          <span className="text-xs text-gray-500 group-hover:text-blue-600">{sale.items.length} item{sale.items.length !== 1 ? 's' : ''}</span>
+                          <span className="text-gray-300 group-hover:text-blue-300">{sale.timestamp}</span>
+                          <span className="text-xs text-gray-400 group-hover:text-blue-400">{sale.items.length} item{sale.items.length !== 1 ? 's' : ''}</span>
                         </div>
-                        <span className="font-semibold text-green-600 group-hover:text-blue-600">${sale.amount.toFixed(2)}</span>
+                        <span className="font-semibold text-green-400 group-hover:text-blue-400">${sale.amount.toFixed(2)}</span>
                       </div>
                     ))
                   )}
                 </div>
                 
-                <div className="border-t pt-3">
+                <div className="border-t border-gray-600 pt-3">
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">Today&apos;s Total:</span>
-                    <span className="font-bold text-blue-600">${(dailySales?.total_sales || 0).toFixed(2)}</span>
+                    <span className="text-gray-300">Today&apos;s Total:</span>
+                    <span className="font-bold text-blue-400">${(dailySales?.total_sales || 0).toFixed(2)}</span>
                   </div>
                 </div>
               </div>

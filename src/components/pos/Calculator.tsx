@@ -87,24 +87,24 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-3 max-w-sm mx-auto h-full flex flex-col">
+    <div className="bg-gray-800 rounded-lg shadow-lg p-3 max-w-sm mx-auto h-full flex flex-col border border-gray-700">
       
       <div className="mb-3 flex-shrink-0">
-        <div className="bg-gray-900 text-white text-right text-xl p-3 rounded font-mono min-h-[50px] flex items-center justify-end">
+        <div className="bg-gray-900 text-green-400 text-right text-xl p-3 rounded font-mono min-h-[50px] flex items-center justify-end border border-gray-600">
           {display}
         </div>
         
         {/* Payment Info - Fixed height area */}
         <div className="mt-2 h-10 flex flex-col justify-center space-y-1 text-xs">
           {totalAmount > 0 && cashReceived !== null && (
-            <div className="flex justify-between text-gray-600">
+            <div className="flex justify-between text-gray-300">
               <span>Cash:</span>
               <span>${cashReceived.toFixed(2)}</span>
             </div>
           )}
           {totalAmount > 0 && change !== null && (
             <div className={`flex justify-between font-semibold ${
-              change >= 0 ? 'text-green-600' : 'text-red-600'
+              change >= 0 ? 'text-green-400' : 'text-red-400'
             }`}>
               <span>Change:</span>
               <span>${change.toFixed(2)}</span>
@@ -120,8 +120,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-sm col-span-2 flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-              : 'bg-red-500 hover:bg-red-600 text-white'
+              ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
+              : 'bg-red-600 hover:bg-red-700 text-white'
           }`}
         >
           Clear
@@ -131,8 +131,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-sm flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-              : 'bg-yellow-500 hover:bg-yellow-600 text-white'
+              ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
+              : 'bg-yellow-600 hover:bg-yellow-700 text-white'
           }`}
         >
           ⌫
@@ -144,8 +144,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           1
@@ -155,8 +155,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           2
@@ -166,8 +166,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           3
@@ -179,8 +179,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           4
@@ -190,8 +190,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           5
@@ -201,8 +201,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           6
@@ -214,8 +214,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           7
@@ -225,8 +225,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           8
@@ -236,8 +236,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           9
@@ -249,8 +249,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`col-span-2 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           0
@@ -260,8 +260,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
           }`}
         >
           .
@@ -273,8 +273,8 @@ export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale
           disabled={isDisabled}
           className={`col-span-3 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
             isDisabled 
-              ? 'bg-gray-400 text-gray-300 cursor-not-allowed' 
-              : 'bg-green-500 hover:bg-green-600 text-white'
+              ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
+              : 'bg-green-600 hover:bg-green-700 text-white'
           }`}
         >
           {isDisabled ? 'History View' : 'Enter'}
