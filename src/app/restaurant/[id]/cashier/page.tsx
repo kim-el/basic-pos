@@ -238,8 +238,8 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
       <div className="flex-1 flex flex-col lg:flex-row gap-3 sm:gap-4 p-3 sm:p-4 overflow-hidden">
         {/* Left Side - Items Box and Voice Control */}
         <div className="flex-1 flex flex-col gap-3 sm:gap-4">
-          {/* Items Box */}
-          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 flex flex-col h-96 sm:h-[26rem] lg:h-[32rem]">
+          {/* Items Box - LOCKED HEIGHT */}
+          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 flex flex-col h-[32rem] min-h-[32rem] max-h-[32rem]">
             <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800">Items</h2>
             
             {/* Items List */}
@@ -256,11 +256,11 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
                     onClick={() => removeItem(item.product.id)}
                     className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 hover:bg-red-50 rounded-lg cursor-pointer transition-colors group"
                   >
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 max-w-[40%]">
                       <h3 className="font-semibold text-gray-900 group-hover:text-red-700 text-lg sm:text-xl truncate transition-colors">{item.product.name}</h3>
                       <p className="text-sm sm:text-base text-gray-600 group-hover:text-red-600 font-medium transition-colors">${item.product.price.toFixed(2)} each</p>
                     </div>
-                    <div className="flex items-center space-x-3 sm:space-x-4 ml-3">
+                    <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
                       <div className="flex items-center space-x-2 sm:space-x-3">
                         <button
                           onClick={(e) => {
@@ -282,10 +282,8 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
                           +
                         </button>
                       </div>
-                      <div className="text-right min-w-0">
-                        <p className="font-bold text-lg sm:text-xl text-blue-600 group-hover:text-red-600 transition-colors">${(item.product.price * item.quantity).toFixed(2)}</p>
-                      </div>
-                      <div className="text-red-500 group-hover:text-red-700 ml-2 text-xl font-bold transition-colors">
+                      <p className="font-bold text-lg sm:text-xl text-blue-600 group-hover:text-red-600 transition-colors ml-4 text-right min-w-[100px]">${(item.product.price * item.quantity).toFixed(2)}</p>
+                      <div className="text-red-500 group-hover:text-red-700 text-xl font-bold transition-colors ml-2">
                         ×
                       </div>
                     </div>
@@ -307,8 +305,8 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
           <VoiceControl onVoiceCommand={simulateVoiceCommand} />
         </div>
 
-        {/* Right Side - Calculator */}
-        <div className="w-full lg:w-96 order-first lg:order-last h-96 sm:h-[26rem] lg:h-[32rem]">
+        {/* Right Side - Calculator - LOCKED HEIGHT */}
+        <div className="w-full lg:w-96 order-first lg:order-last h-[32rem] min-h-[32rem] max-h-[32rem]">
           <Calculator 
             totalAmount={getTotalPrice()}
             onChangeCalculated={(change) => {

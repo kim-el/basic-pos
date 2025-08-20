@@ -92,25 +92,23 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
           {display}
         </div>
         
-        {/* Payment Info */}
-        {totalAmount > 0 && (
-          <div className="mt-2 space-y-1 text-xs">
-            {cashReceived !== null && (
-              <div className="flex justify-between text-gray-600">
-                <span>Cash:</span>
-                <span>${cashReceived.toFixed(2)}</span>
-              </div>
-            )}
-            {change !== null && (
-              <div className={`flex justify-between font-semibold ${
-                change >= 0 ? 'text-green-600' : 'text-red-600'
-              }`}>
-                <span>Change:</span>
-                <span>${change.toFixed(2)}</span>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Payment Info - Fixed height area */}
+        <div className="mt-2 h-10 flex flex-col justify-center space-y-1 text-xs">
+          {totalAmount > 0 && cashReceived !== null && (
+            <div className="flex justify-between text-gray-600">
+              <span>Cash:</span>
+              <span>${cashReceived.toFixed(2)}</span>
+            </div>
+          )}
+          {totalAmount > 0 && change !== null && (
+            <div className={`flex justify-between font-semibold ${
+              change >= 0 ? 'text-green-600' : 'text-red-600'
+            }`}>
+              <span>Change:</span>
+              <span>${change.toFixed(2)}</span>
+            </div>
+          )}
+        </div>
       </div>
       
       <div className="grid grid-cols-3 gap-1 flex-1 grid-rows-6">
@@ -130,22 +128,22 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
 
         {/* Row 2 */}
         <button
-          onClick={() => inputNumber('7')}
+          onClick={() => inputNumber('1')}
           className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
-          7
+          1
         </button>
         <button
-          onClick={() => inputNumber('8')}
+          onClick={() => inputNumber('2')}
           className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
-          8
+          2
         </button>
         <button
-          onClick={() => inputNumber('9')}
+          onClick={() => inputNumber('3')}
           className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
-          9
+          3
         </button>
 
         {/* Row 3 */}
@@ -170,22 +168,22 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
 
         {/* Row 4 */}
         <button
-          onClick={() => inputNumber('1')}
+          onClick={() => inputNumber('7')}
           className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
-          1
+          7
         </button>
         <button
-          onClick={() => inputNumber('2')}
+          onClick={() => inputNumber('8')}
           className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
-          2
+          8
         </button>
         <button
-          onClick={() => inputNumber('3')}
+          onClick={() => inputNumber('9')}
           className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
         >
-          3
+          9
         </button>
 
         {/* Row 5 */}
