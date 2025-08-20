@@ -5,9 +5,11 @@ import { useState, useEffect } from 'react';
 interface CalculatorProps {
   totalAmount?: number;
   onChangeCalculated?: (change: number) => void;
+  onCompleteSale?: () => void;
+  isDisabled?: boolean;
 }
 
-export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorProps) {
+export function Calculator({ totalAmount = 0, onChangeCalculated, onCompleteSale, isDisabled = false }: CalculatorProps) {
   const [display, setDisplay] = useState('0');
   const [cashReceived, setCashReceived] = useState<number | null>(null);
   const [change, setChange] = useState<number | null>(null);
@@ -114,98 +116,168 @@ export function Calculator({ totalAmount = 0, onChangeCalculated }: CalculatorPr
       <div className="grid grid-cols-3 gap-1 flex-1 grid-rows-6">
         {/* Row 1 - Control buttons */}
         <button
-          onClick={clear}
-          className="bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors text-sm col-span-2 flex items-center justify-center"
+          onClick={isDisabled ? undefined : clear}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-sm col-span-2 flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+              : 'bg-red-500 hover:bg-red-600 text-white'
+          }`}
         >
           Clear
         </button>
         <button
-          onClick={backspace}
-          className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition-colors text-sm flex items-center justify-center"
+          onClick={isDisabled ? undefined : backspace}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-sm flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+              : 'bg-yellow-500 hover:bg-yellow-600 text-white'
+          }`}
         >
           ⌫
         </button>
 
         {/* Row 2 */}
         <button
-          onClick={() => inputNumber('1')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('1')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           1
         </button>
         <button
-          onClick={() => inputNumber('2')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('2')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           2
         </button>
         <button
-          onClick={() => inputNumber('3')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('3')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           3
         </button>
 
         {/* Row 3 */}
         <button
-          onClick={() => inputNumber('4')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('4')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           4
         </button>
         <button
-          onClick={() => inputNumber('5')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('5')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           5
         </button>
         <button
-          onClick={() => inputNumber('6')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('6')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           6
         </button>
 
         {/* Row 4 */}
         <button
-          onClick={() => inputNumber('7')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('7')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           7
         </button>
         <button
-          onClick={() => inputNumber('8')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('8')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           8
         </button>
         <button
-          onClick={() => inputNumber('9')}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('9')}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           9
         </button>
 
         {/* Row 5 */}
         <button
-          onClick={() => inputNumber('0')}
-          className="col-span-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => inputNumber('0')}
+          disabled={isDisabled}
+          className={`col-span-2 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           0
         </button>
         <button
-          onClick={inputDecimal}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : inputDecimal}
+          disabled={isDisabled}
+          className={`rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+          }`}
         >
           .
         </button>
         
         {/* Row 6 */}
         <button
-          onClick={() => {}}
-          className="col-span-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-colors text-lg flex items-center justify-center"
+          onClick={isDisabled ? undefined : () => onCompleteSale?.()}
+          disabled={isDisabled}
+          className={`col-span-3 rounded-lg font-semibold transition-colors text-lg flex items-center justify-center ${
+            isDisabled 
+              ? 'bg-gray-400 text-gray-300 cursor-not-allowed' 
+              : 'bg-green-500 hover:bg-green-600 text-white'
+          }`}
         >
-          Enter
+          {isDisabled ? 'History View' : 'Enter'}
         </button>
       </div>
     </div>

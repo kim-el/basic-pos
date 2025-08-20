@@ -31,6 +31,23 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
     sale_date: new Date().toISOString().split('T')[0]
   });
   
+  // Sales history state
+  const [salesHistory, setSalesHistory] = useState<Array<{
+    id: string;
+    timestamp: string;
+    amount: number;
+    items: CartItem[];
+  }>>([]);
+  
+  // History view mode state
+  const [isHistoryMode, setIsHistoryMode] = useState(false);
+  const [currentHistorySale, setCurrentHistorySale] = useState<{
+    id: string;
+    timestamp: string;
+    amount: number;
+    items: CartItem[];
+  } | null>(null);
+  
   // Add item form state
   const [showAddForm, setShowAddForm] = useState(false);
   const [newItemName, setNewItemName] = useState('');
@@ -42,7 +59,7 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
     fetchDailySales();
     
     // Add items with 1 second delays for demo video
-    if (isConnected && restaurantId) {
+    if (restaurantId) {
       // Clear any existing items first
       setItems([]);
       updateOrder([]);
@@ -103,7 +120,7 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
         });
       }, 5000);
     }
-  }, [isConnected, restaurantId]);
+  }, [restaurantId]);
 
   // Voice simulation - add items programmatically
   const simulateVoiceCommand = (command: string) => {
@@ -196,6 +213,50 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
     return items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   };
 
+  const completeSale = () => {
+    const total = getTotalPrice();
+    if (total <= 0 || items.length === 0) {
+      return; // Can't complete empty sale
+    }
+
+    // Create new sale record
+    const newSale = {
+      id: Date.now().toString(),
+      timestamp: new Date().toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      }),
+      amount: total,
+      items: [...items]
+    };
+
+    // Add to sales history (most recent first)
+    setSalesHistory(prev => [newSale, ...prev]);
+
+    // Update daily sales
+    setDailySales(prev => ({
+      ...prev,
+      total_sales: prev.total_sales + total,
+      total_transactions: prev.total_transactions + 1
+    }));
+
+    // Clear current cart
+    setItems([]);
+    updateOrder([]);
+  };
+
+  const restoreSaleFromHistory = (sale: { id: string; timestamp: string; amount: number; items: CartItem[] }) => {
+    // Switch to history view mode
+    setIsHistoryMode(true);
+    setCurrentHistorySale(sale);
+  };
+
+  const exitHistoryMode = () => {
+    setIsHistoryMode(false);
+    setCurrentHistorySale(null);
+  };
+
   const handleAddItem = () => {
     if (newItemName.trim() && newItemPrice && newItemQuantity) {
       addItem(newItemName.trim(), parseInt(newItemQuantity), parseFloat(newItemPrice));
@@ -240,52 +301,91 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
         <div className="flex-1 flex flex-col gap-3 sm:gap-4">
           {/* Items Box - LOCKED HEIGHT */}
           <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 flex flex-col h-[32rem] min-h-[32rem] max-h-[32rem]">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800">Items</h2>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
+                {isHistoryMode ? `Sale History - ${currentHistorySale?.timestamp}` : 'Items'}
+              </h2>
+              {isHistoryMode && (
+                <button
+                  onClick={exitHistoryMode}
+                  className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition-colors"
+                >
+                  Back to Cart
+                </button>
+              )}
+            </div>
             
             {/* Items List */}
             <div className="flex-1 overflow-y-auto space-y-2 mb-3 sm:mb-4 min-h-0">
-              {items.length === 0 ? (
+              {(isHistoryMode ? currentHistorySale?.items || [] : items).length === 0 ? (
                 <div className="text-center text-gray-500 py-6 sm:py-8">
-                  <p className="text-sm sm:text-base">No items added yet</p>
-                  <p className="text-xs sm:text-sm">Speak to add items</p>
+                  <p className="text-sm sm:text-base">
+                    {isHistoryMode ? 'No items in this sale' : 'No items added yet'}
+                  </p>
+                  {!isHistoryMode && <p className="text-xs sm:text-sm">Speak to add items</p>}
                 </div>
               ) : (
-                items.map((item) => (
+                (isHistoryMode ? currentHistorySale?.items || [] : items).map((item) => (
                   <div 
-                    key={item.product.id} 
-                    onClick={() => removeItem(item.product.id)}
-                    className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 hover:bg-red-50 rounded-lg cursor-pointer transition-colors group"
+                    key={`${isHistoryMode ? 'history' : 'current'}-${item.product.id}`} 
+                    onClick={isHistoryMode ? undefined : () => removeItem(item.product.id)}
+                    className={`flex items-center justify-between p-3 sm:p-4 rounded-lg transition-colors ${
+                      isHistoryMode 
+                        ? 'bg-gray-100 border border-gray-200' 
+                        : 'bg-gray-50 hover:bg-red-50 cursor-pointer group'
+                    }`}
                   >
                     <div className="flex-1 min-w-0 max-w-[40%]">
-                      <h3 className="font-semibold text-gray-900 group-hover:text-red-700 text-lg sm:text-xl truncate transition-colors">{item.product.name}</h3>
-                      <p className="text-sm sm:text-base text-gray-600 group-hover:text-red-600 font-medium transition-colors">${item.product.price.toFixed(2)} each</p>
+                      <h3 className={`font-semibold text-lg sm:text-xl truncate transition-colors ${
+                        isHistoryMode 
+                          ? 'text-gray-700' 
+                          : 'text-gray-900 group-hover:text-red-700'
+                      }`}>{item.product.name}</h3>
+                      <p className={`text-sm sm:text-base font-medium transition-colors ${
+                        isHistoryMode 
+                          ? 'text-gray-500' 
+                          : 'text-gray-600 group-hover:text-red-600'
+                      }`}>${item.product.price.toFixed(2)} each</p>
                     </div>
                     <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-                      <div className="flex items-center space-x-2 sm:space-x-3">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateQuantity(item.product.id, item.quantity - 1);
-                          }}
-                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors text-lg font-semibold"
-                        >
-                          −
-                        </button>
-                        <span className="w-8 sm:w-10 text-center font-bold text-lg sm:text-xl group-hover:text-red-700 transition-colors">{item.quantity}</span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateQuantity(item.product.id, item.quantity + 1);
-                          }}
-                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors text-lg font-semibold"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <p className="font-bold text-lg sm:text-xl text-blue-600 group-hover:text-red-600 transition-colors ml-4 text-right min-w-[100px]">${(item.product.price * item.quantity).toFixed(2)}</p>
-                      <div className="text-red-500 group-hover:text-red-700 text-xl font-bold transition-colors ml-2">
-                        ×
-                      </div>
+                      {!isHistoryMode && (
+                        <div className="flex items-center space-x-2 sm:space-x-3">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateQuantity(item.product.id, item.quantity - 1);
+                            }}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors text-lg font-semibold"
+                          >
+                            −
+                          </button>
+                          <span className="w-8 sm:w-10 text-center font-bold text-lg sm:text-xl group-hover:text-red-700 transition-colors">{item.quantity}</span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateQuantity(item.product.id, item.quantity + 1);
+                            }}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors text-lg font-semibold"
+                          >
+                            +
+                          </button>
+                        </div>
+                      )}
+                      {isHistoryMode && (
+                        <span className="w-8 sm:w-10 text-center font-bold text-lg sm:text-xl text-gray-700">
+                          {item.quantity}
+                        </span>
+                      )}
+                      <p className={`font-bold text-lg sm:text-xl ml-4 text-right min-w-[100px] transition-colors ${
+                        isHistoryMode 
+                          ? 'text-gray-700' 
+                          : 'text-blue-600 group-hover:text-red-600'
+                      }`}>${(item.product.price * item.quantity).toFixed(2)}</p>
+                      {!isHistoryMode && (
+                        <div className="text-red-500 group-hover:text-red-700 text-xl font-bold transition-colors ml-2">
+                          ×
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))
@@ -296,22 +396,75 @@ export default function RestaurantCashier({ params }: POSSystemProps) {
             <div className="border-t-2 pt-4 sm:pt-5">
               <div className="flex justify-between items-center text-2xl sm:text-3xl lg:text-4xl font-bold">
                 <span className="text-gray-900">Total:</span>
-                <span className="text-blue-600">${getTotalPrice().toFixed(2)}</span>
+                <span className={isHistoryMode ? "text-gray-700" : "text-blue-600"}>
+                  ${isHistoryMode ? (currentHistorySale?.amount.toFixed(2) || '0.00') : getTotalPrice().toFixed(2)}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Voice Control - Below Items */}
-          <VoiceControl onVoiceCommand={simulateVoiceCommand} />
+          {/* Bottom Row: Voice Control and Sales History */}
+          <div className="flex gap-3 sm:gap-4">
+            {/* Voice Control */}
+            <div className="flex-1">
+              <VoiceControl onVoiceCommand={simulateVoiceCommand} />
+            </div>
+            
+            {/* Sales History */}
+            <div className="flex-1">
+              <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 h-48 sm:h-52 lg:h-56 flex flex-col">
+                <div className="mb-3 sm:mb-4">
+                  <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-gray-800">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Sales History
+                  </h2>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto space-y-2 mb-3">
+                  {salesHistory.length === 0 ? (
+                    <div className="text-center text-gray-500 py-6">
+                      <p className="text-sm">No sales yet today</p>
+                      <p className="text-xs">Complete a sale to see history</p>
+                    </div>
+                  ) : (
+                    salesHistory.map((sale) => (
+                      <div 
+                        key={sale.id} 
+                        onClick={() => restoreSaleFromHistory(sale)}
+                        className="flex justify-between items-center p-2 bg-gray-50 hover:bg-blue-50 rounded text-sm cursor-pointer transition-colors group"
+                      >
+                        <div className="flex flex-col">
+                          <span className="text-gray-600 group-hover:text-blue-700">{sale.timestamp}</span>
+                          <span className="text-xs text-gray-500 group-hover:text-blue-600">{sale.items.length} item{sale.items.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        <span className="font-semibold text-green-600 group-hover:text-blue-600">${sale.amount.toFixed(2)}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+                
+                <div className="border-t pt-3">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Today&apos;s Total:</span>
+                    <span className="font-bold text-blue-600">${(dailySales?.total_sales || 0).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Right Side - Calculator - LOCKED HEIGHT */}
         <div className="w-full lg:w-96 order-first lg:order-last h-[32rem] min-h-[32rem] max-h-[32rem]">
           <Calculator 
-            totalAmount={getTotalPrice()}
+            totalAmount={isHistoryMode ? (currentHistorySale?.amount || 0) : getTotalPrice()}
             onChangeCalculated={(change) => {
               console.log('Change calculated:', change);
             }}
+            onCompleteSale={isHistoryMode ? undefined : completeSale}
+            isDisabled={isHistoryMode}
           />
         </div>
       </div>

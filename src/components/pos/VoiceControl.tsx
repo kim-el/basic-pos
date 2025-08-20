@@ -15,7 +15,7 @@ interface VoiceControlProps {
 export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
   const [isListening, setIsListening] = useState(false);
   const [lastCommand, setLastCommand] = useState<string>('');
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+  const [recognition, setRecognition] = useState<any>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
@@ -62,16 +62,17 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
   };
 
   return (
-    <Card className={className}>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
+    <div className={`bg-white rounded-lg shadow-lg p-3 sm:p-4 h-48 sm:h-52 lg:h-56 flex flex-col ${className}`}>
+      <div className="mb-3 sm:mb-4">
+        <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-gray-800">
           <Volume2 className="h-5 w-5" />
           Voice Control
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Top Row: Wave and Button */}
-        <div className="flex items-center gap-2">
+        </h2>
+      </div>
+      
+      <div className="flex-1 flex flex-col justify-center space-y-4">
+        {/* Wave and Button Row */}
+        <div className="flex items-center gap-4">
           {/* Voice Wave Visualization */}
           <div className="flex-1 min-w-0">
             <VoiceWave isListening={isListening} shouldAnalyzeAudio={isListening} />
@@ -80,19 +81,19 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
           {/* Voice Activation Button */}
           <Button
             onClick={toggleListening}
-            className={`rounded-lg w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 text-sm sm:text-lg lg:text-xl font-bold border-2 sm:border-4 ${isListening ? 'bg-red-500 hover:bg-red-600 border-red-600' : 'bg-blue-500 hover:bg-blue-600 border-blue-600'} shadow-lg sm:shadow-xl`}
+            className={`rounded-lg w-20 h-20 sm:w-24 sm:h-24 text-sm sm:text-base font-bold border-2 ${isListening ? 'bg-red-500 hover:bg-red-600 border-red-600' : 'bg-blue-500 hover:bg-blue-600 border-blue-600'} shadow-lg flex-shrink-0`}
             variant="default"
           >
             <div className="flex flex-col items-center justify-center">
               {isListening ? (
                 <>
-                  <MicOff className="h-6 w-6 sm:h-8 sm:w-8 lg:h-12 lg:w-12 mb-1 sm:mb-2" />
-                  <span className="text-xs sm:text-sm lg:text-base">STOP</span>
+                  <MicOff className="h-5 w-5 sm:h-6 sm:w-6 mb-1" />
+                  <span className="text-xs sm:text-sm">STOP</span>
                 </>
               ) : (
                 <>
-                  <Mic className="h-6 w-6 sm:h-8 sm:w-8 lg:h-12 lg:w-12 mb-1 sm:mb-2" />
-                  <span className="text-xs sm:text-sm lg:text-base">START</span>
+                  <Mic className="h-5 w-5 sm:h-6 sm:w-6 mb-1" />
+                  <span className="text-xs sm:text-sm">START</span>
                 </>
               )}
             </div>
@@ -109,16 +110,18 @@ export function VoiceControl({ onVoiceCommand, className }: VoiceControlProps) {
           </Badge>
         </div>
         
-        {/* Last Command Display */}
-        {lastCommand && (
-          <div className="text-center">
-            <p className="text-xs sm:text-sm text-gray-500 mb-1">Last command:</p>
-            <p className="text-xs sm:text-sm font-medium bg-gray-100 rounded px-2 py-1 break-words">
-              "{lastCommand}"
-            </p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        {/* Last Command Display - Fixed height area */}
+        <div className="min-h-[2rem] flex items-center justify-center">
+          {lastCommand && (
+            <div className="text-center">
+              <p className="text-xs sm:text-sm text-gray-500 mb-1">Last command:</p>
+              <p className="text-xs sm:text-sm font-medium bg-gray-100 rounded px-2 py-1 break-words">
+                &ldquo;{lastCommand}&rdquo;
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
